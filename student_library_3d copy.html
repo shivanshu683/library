@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Digital Library - Futuristic Study Hub</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-dark: #0a0e27;
+            --bg-light: #1a1f3a;
+            --cyan: #00d4ff;
+            --purple: #a78bfa;
+            --pink: #ff006e;
+            --white: #ffffff;
+            --text-primary: #f0f0f0;
+            --text-secondary: #b0b0b0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-light) 100%);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            background: rgba(10, 14, 39, 0.7);
+            border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, var(--cyan), var(--purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        nav a:hover {
+            color: var(--cyan);
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--cyan), var(--purple));
+            transition: width 0.3s ease;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8rem 4rem 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(0, 212, 255, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -10%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(167, 139, 250, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: float 10s ease-in-out infinite reverse;
+        }
+
+        .hero-content {
+            flex: 1;
+            z-index: 10;
+            animation: slideInLeft 0.8s ease;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+            background: linear-gradient(135deg, var(--cyan), var(--purple), var(--pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            background: linear-gradient(135deg, var(--cyan), var(--purple));
+            color: var(--bg-dark);
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 40px rgba(0, 212, 255, 0.3);
+            cursor: pointer;
+            border: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            transition: left 0.3s ease;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 50px rgba(0, 212, 255, 0.4);
+        }
+
+        .cta-button:hover::before {
+            left: 100%;
+        }
+
+        /* 3D Cube Animation */
+        .hero-3d {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 500px;
+            perspective: 1000px;
+            animation: slideInRight 0.8s ease;
+        }
+
+        .cube {
+            width: 200px;
+            height: 200px;
+            position: relative;
+            transform-style: preserve-3d;
+            animation: rotateCube 20s infinite linear;
+        }
+
+        .cube-face {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            font-weight: bold;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(0, 212, 255, 0.3);
+            background: rgba(0, 212, 255, 0.1);
+        }
+
+        .face-1 { transform: translateZ(100px); }
+        .face-2 { transform: rotateY(90deg) translateZ(100px); }
+        .face-3 { transform: rotateY(180deg) translateZ(100px); }
+        .face-4 { transform: rotateY(-90deg) translateZ(100px); }
+        .face-5 { transform: rotateX(90deg) translateZ(100px); }
+        .face-6 { transform: rotateX(-90deg) translateZ(100px); }
+
+        @keyframes rotateCube {
+            from { transform: rotateX(0deg) rotateY(0deg); }
+            to { transform: rotateX(360deg) rotateY(360deg); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(30px); }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Features Section */
+        .features {
+            padding: 6rem 4rem;
+            background: linear-gradient(135deg, rgba(26, 31, 58, 0.5), rgba(10, 14, 39, 0.5));
+            border-top: 1px solid rgba(0, 212, 255, 0.2);
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 3rem;
+            margin-bottom: 4rem;
+            background: linear-gradient(135deg, var(--cyan), var(--purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            backdrop-filter: blur(10px);
+            background: rgba(0, 212, 255, 0.05);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            padding: 2rem;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(0, 212, 255, 0.2) 0%, transparent 70%);
+            border-radius: 50%;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(0, 212, 255, 0.5);
+            background: rgba(0, 212, 255, 0.1);
+        }
+
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: inline-block;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--cyan);
+        }
+
+        .feature-card p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Reviews Section */
+        .reviews {
+            padding: 6rem 4rem;
+            background: linear-gradient(135deg, var(--bg-dark), var(--bg-light));
+        }
+
+        .reviews-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .review-card {
+            backdrop-filter: blur(10px);
+            background: rgba(167, 139, 250, 0.05);
+            border: 1px solid rgba(167, 139, 250, 0.2);
+            padding: 2rem;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .review-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(167, 139, 250, 0.5);
+            background: rgba(167, 139, 250, 0.1);
+            box-shadow: 0 10px 40px rgba(167, 139, 250, 0.2);
+        }
+
+        .review-card .rating {
+            color: #ffd700;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .review-card .reviewer-name {
+            font-weight: 700;
+            color: var(--cyan);
+            margin-bottom: 0.5rem;
+        }
+
+        .review-card .review-text {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        /* Info Section */
+        .info-section {
+            padding: 6rem 4rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            background: linear-gradient(135deg, rgba(26, 31, 58, 0.3), rgba(10, 14, 39, 0.3));
+        }
+
+        .info-content h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--cyan), var(--purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .info-item {
+            margin-bottom: 2rem;
+            display: flex;
+            gap: 1.5rem;
+            align-items: flex-start;
+        }
+
+        .info-item-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--cyan), var(--purple));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .info-item-content h3 {
+            color: var(--cyan);
+            margin-bottom: 0.3rem;
+        }
+
+        .info-item-content p {
+            color: var(--text-secondary);
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .stat-box {
+            backdrop-filter: blur(10px);
+            background: rgba(0, 212, 255, 0.05);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-box:hover {
+            transform: scale(1.05);
+            border-color: var(--cyan);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, var(--cyan), var(--purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+        }
+
+        /* Contact Section */
+        .contact {
+            padding: 6rem 4rem;
+            text-align: center;
+            background: linear-gradient(135deg, var(--bg-light), var(--bg-dark));
+            border-top: 1px solid rgba(0, 212, 255, 0.2);
+        }
+
+        .contact h2 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, var(--cyan), var(--purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
+        .contact-item {
+            text-align: center;
+        }
+
+        .contact-item-label {
+            color: var(--cyan);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .contact-item-value {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .cta-contact {
+            display: inline-block;
+            margin-top: 2rem;
+        }
+
+        /* Footer */
+        footer {
+            padding: 2rem 4rem;
+            text-align: center;
+            border-top: 1px solid rgba(0, 212, 255, 0.2);
+            color: var(--text-secondary);
+            background: rgba(10, 14, 39, 0.8);
+        }
+
+        /* Scroll animation */
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+
+        .scroll-reveal.reveal {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero {
+                flex-direction: column;
+                padding: 8rem 2rem 4rem;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-3d {
+                margin-top: 2rem;
+            }
+
+            .info-section {
+                grid-template-columns: 1fr;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            nav ul {
+                gap: 1rem;
+                font-size: 0.9rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .contact-info {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="logo">📚 SDL</div>
+        <ul>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#reviews">Reviews</a></li>
+            <li><a href="#info">About</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Student Digital Library</h1>
+            <p>Transform Your Exam Preparation with 24/7 Access to Premium Study Space</p>
+            <p style="font-size: 1rem; color: var(--text-secondary); margin-bottom: 2rem;">
+                Excellence in facilities • Expert guidance • Perfect ambience for success
+            </p>
+            <button class="cta-button" onclick="document.getElementById('contact').scrollIntoView({behavior: 'smooth'})">
+                Get in Touch →
+            </button>
+        </div>
+        <div class="hero-3d">
+            <div class="cube">
+                <div class="cube-face face-1">📚</div>
+                <div class="cube-face face-2">✨</div>
+                <div class="cube-face face-3">🎓</div>
+                <div class="cube-face face-4">🏆</div>
+                <div class="cube-face face-5">🌟</div>
+                <div class="cube-face face-6">💡</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <h2 class="section-title">Premium Facilities</h2>
+        <div class="features-grid">
+            <div class="feature-card scroll-reveal">
+                <div class="feature-icon">🌍</div>
+                <h3>Open 24 Hours</h3>
+                <p>Study whenever you want. Our library is always open to support your learning journey at any time of the day.</p>
+            </div>
+            <div class="feature-card scroll-reveal">
+                <div class="feature-icon">❄️</div>
+                <h3>AC & Climate Control</h3>
+                <p>Comfortable temperature maintained throughout with advanced cooling systems for optimal study conditions.</p>
+            </div>
+            <div class="feature-card scroll-reveal">
+                <div class="feature-icon">💺</div>
+                <h3>Comfortable Seating</h3>
+                <p>Ergonomic chairs and spacious desks designed for extended study sessions without discomfort.</p>
+            </div>
+            <div class="feature-card scroll-reveal">
+                <div class="feature-icon">📖</div>
+                <h3>Khan Sir Notes</h3>
+                <p>Comprehensive study materials from Khan Sir curated specifically for competitive exam preparation.</p>
+            </div>
+            <div class="feature-card scroll-reveal">
+                <div class="feature-icon">🤐</div>
+                <h3>Peaceful Environment</h3>
+                <p>Serene and quiet atmosphere with minimal distractions, perfect for focused learning and deep study.</p>
+            </div>
+            <div class="feature-card scroll-reveal">
+                <div class="feature-icon">🏢</div>
+                <h3>Prime Location</h3>
+                <p>Conveniently located on Faizabad Road near Airtel office for easy accessibility from anywhere in Akbarpur.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Reviews Section -->
+    <section class="reviews" id="reviews">
+        <h2 class="section-title">What Students Say</h2>
+        <div class="reviews-grid">
+            <div class="review-card scroll-reveal">
+                <div class="rating">⭐⭐⭐⭐⭐</div>
+                <div class="reviewer-name">James Allen - Local Guide</div>
+                <div class="review-text">"This library is perfect for aspirants preparing for any exam like SSC, UPSC. Better facilities than all other libraries in Akbarpur. I love it!"</div>
+            </div>
+            <div class="review-card scroll-reveal">
+                <div class="rating">⭐⭐⭐⭐⭐</div>
+                <div class="reviewer-name">Ankur Patel</div>
+                <div class="review-text">"Beautiful environment! Comfortable seats, Khan Sir notes, AC and blower - all excellent features available. Truly one-of-a-kind! 📚"</div>
+            </div>
+            <div class="review-card scroll-reveal">
+                <div class="rating">⭐⭐⭐⭐⭐</div>
+                <div class="reviewer-name">Aman Verma</div>
+                <div class="review-text">"According to me, this library is absolutely perfect for students. A welcome space for all friends studying together!"</div>
+            </div>
+            <div class="review-card scroll-reveal">
+                <div class="rating">⭐⭐⭐⭐⭐</div>
+                <div class="reviewer-name">Ragini</div>
+                <div class="review-text">"Best library for students. The atmosphere is very quiet and peaceful. Perfect for concentration and productive study sessions."</div>
+            </div>
+            <div class="review-card scroll-reveal">
+                <div class="rating">⭐⭐⭐⭐⭐</div>
+                <div class="reviewer-name">Rajat Pandey</div>
+                <div class="review-text">"Peaceful ambience with the best market facilities. OVERALL IT'S PERFECT FOR AN AMBITIOUS AND HARDWORKING STUDENT."</div>
+            </div>
+            <div class="review-card scroll-reveal">
+                <div class="rating">⭐⭐⭐⭐⭐</div>
+                <div class="reviewer-name">Nitish Verma</div>
+                <div class="review-text">"Clean place with good environment for self-study. All facilities related to library studies are available here."</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Info Section -->
+    <section class="info-section" id="info">
+        <div class="info-content">
+            <h2>Why Choose Us?</h2>
+            <div class="info-item">
+                <div class="info-item-icon">📍</div>
+                <div class="info-item-content">
+                    <h3>Prime Location</h3>
+                    <p>Faizabad Road, near Airtel office, Meeranpur - Easy to reach from anywhere</p>
+                </div>
+            </div>
+            <div class="info-item">
+                <div class="info-item-icon">🎯</div>
+                <div class="info-item-content">
+                    <h3>Exam Focused</h3>
+                    <p>Designed specifically for SSC, UPSC, and all competitive exam aspirants</p>
+                </div>
+            </div>
+            <div class="info-item">
+                <div class="info-item-icon">⚡</div>
+                <div class="info-item-content">
+                    <h3>24/7 Access</h3>
+                    <p>Study at your own pace, anytime, day or night. Never miss a learning opportunity</p>
+                </div>
+            </div>
+            <div class="info-item">
+                <div class="info-item-icon">👥</div>
+                <div class="info-item-content">
+                    <h3>Community Trusted</h3>
+                    <p>1,305+ photos and 173+ reviews from satisfied students like you</p>
+                </div>
+            </div>
+        </div>
+        <div class="stats">
+            <div class="stat-box scroll-reveal">
+                <div class="stat-number">173+</div>
+                <div class="stat-label">Reviews</div>
+            </div>
+            <div class="stat-box scroll-reveal">
+                <div class="stat-number">1,305+</div>
+                <div class="stat-label">Photos Shared</div>
+            </div>
+            <div class="stat-box scroll-reveal">
+                <div class="stat-number">24/7</div>
+                <div class="stat-label">Open Hours</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact" id="contact">
+        <h2>Get in Touch</h2>
+        <div class="contact-info">
+            <div class="contact-item">
+                <div class="contact-item-label">📞 Phone</div>
+                <div class="contact-item-value">081270 55606</div>
+            </div>
+            <div class="contact-item">
+                <div class="contact-item-label">📍 Location</div>
+                <div class="contact-item-value">Faizabad Rd, near Airtel<br>Akbarpur, Uttar Pradesh 224122</div>
+            </div>
+            <div class="contact-item">
+                <div class="contact-item-label">⏰ Hours</div>
+                <div class="contact-item-value">Open 24 Hours<br>Every Day</div>
+            </div>
+        </div>
+        <button class="cta-button cta-contact" onclick="window.location.href='tel:08127055606'">
+            Call Now →
+        </button>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 Student Digital Library. Empowering Students Towards Excellence. | CGHJ+5H Akbarpur</p>
+    </footer>
+
+    <script>
+        // Intersection Observer for scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('reveal');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.scroll-reveal').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Smooth scroll behavior
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add animation to hero elements on load
+        window.addEventListener('load', () => {
+            const heroElements = document.querySelectorAll('.hero-content, .hero-3d');
+            heroElements.forEach((el, index) => {
+                setTimeout(() => {
+                    el.style.opacity = '1';
+                }, 100 * index);
+            });
+        });
+
+        // Interactive hover effect on cube
+        const cube = document.querySelector('.cube');
+        document.addEventListener('mousemove', (e) => {
+            const rect = cube.getBoundingClientRect();
+            const x = e.clientX - rect.left - rect.width / 2;
+            const y = e.clientY - rect.top - rect.height / 2;
+            
+            const rotateY = (x / rect.width) * 20;
+            const rotateX = -(y / rect.height) * 20;
+            
+            cube.style.animation = 'none';
+            cube.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        });
+
+        document.addEventListener('mouseleave', () => {
+            cube.style.animation = 'rotateCube 20s infinite linear';
+        });
+    </script>
+</body>
+</html>
